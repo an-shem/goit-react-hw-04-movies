@@ -1,5 +1,4 @@
 import { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { Link, Route, Switch } from 'react-router-dom';
 import Cast from '../../components/Cast';
 import Reviews from '../../components/Reviews';

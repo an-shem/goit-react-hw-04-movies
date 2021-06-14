@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import movieApi from '../../services/movieApi';
 import Loading from '../Loading';
 
@@ -10,13 +11,18 @@ class Reviews extends Component {
     isLoading: false,
     showReviews: false,
     showNotFound: false,
+    timerId: null,
   };
 
-  async componentDidMount() {
-    setTimeout(() => this.setState({ showNotFound: true }), 1000);
-    this.setState({ isLoading: true });
+  componentDidMount() {
+    const timerId = setTimeout(
+      () => this.setState({ showNotFound: true }),
+      1000,
+    );
 
-    await movieApi
+    this.setState({ isLoading: true, timerId });
+
+    movieApi
       .fetchReviews(this.props.id)
       .then(({ results }) =>
         results.map(result => ({
@@ -33,11 +39,12 @@ class Reviews extends Component {
           });
         }
       })
-      // .then(dataReviews => this.setState({ dataReviews }))
       .catch(error => console.log(error))
       .finally(this.setState({ isLoading: false }));
+  }
 
-    console.log('this.props dataReviews >>>', this.state.dataReviews);
+  componentWillUnmount() {
+    clearTimeout(this.state.timerId);
   }
 
   render() {
@@ -66,5 +73,9 @@ class Reviews extends Component {
     );
   }
 }
+
+Reviews.propTypes = {
+  id: PropTypes.number,
+};
 
 export default Reviews;

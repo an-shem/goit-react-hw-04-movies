@@ -12,27 +12,19 @@ class MoviesPage extends Component {
   };
 
   async componentDidMount() {
-    console.log('this.props in Mount >>>', this.props);
-
     const searchNoParse = await this.props.location.search;
-    console.log('searchNoParse', searchNoParse);
 
     if (!searchNoParse) return;
 
     const search = queryString.parse(searchNoParse);
-    console.log('SEARCH in Mount >>>', search);
 
     const searchQuery = search.query;
-    console.log('searchQuery >>>>', searchQuery);
     movieApi
       .fetchSearchMovies(searchQuery)
       .then(searchMovies => this.setState({ searchMovies }));
   }
 
   componentDidUpdate(prevProps) {
-    console.log('this.props in Upodate >>>', this.props);
-    console.log('this.props in prevProps >>>', prevProps);
-
     if (this.props.location.search === prevProps.location.search) return;
     this.setState({ searchMovies: null });
   }

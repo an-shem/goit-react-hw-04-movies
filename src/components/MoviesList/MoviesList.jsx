@@ -4,7 +4,6 @@ import styles from './MoviesList.module.css';
 
 const MoviesList = props => {
   const { movies, location } = props;
-  console.log('location from MoviesList >>>', location);
 
   if (!movies) return null;
   return (

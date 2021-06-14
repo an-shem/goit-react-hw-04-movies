@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import Loading from '../Loading';
 import movieApi from '../../services/movieApi.js';
 import styles from './Cast.module.css';
@@ -12,11 +13,15 @@ class Cast extends Component {
     isLoading: false,
     showCast: false,
     showNotFound: false,
+    timerId: null,
   };
 
   componentDidMount() {
-    setTimeout(() => this.setState({ showNotFound: true }), 1000);
-    this.setState({ isLoading: true });
+    const timerId = setTimeout(
+      () => this.setState({ showNotFound: true }),
+      1000,
+    );
+    this.setState({ isLoading: true, timerId });
 
     movieApi
       .fetchCast(this.props.id)
@@ -37,7 +42,10 @@ class Cast extends Component {
       })
       .catch(error => console.log(error))
       .finally(this.setState({ isLoading: false }));
-    console.log('this.props Cast >>>', this.props);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.state.timerId);
   }
 
   render() {
@@ -49,7 +57,6 @@ class Cast extends Component {
         {!isLoading && showCast && (
           <ul className={styles.list}>
             {dataCast.map(({ name, character, img }) => {
-              console.log('путь картинки >>>', img);
               const authorImg = img ? `${IMAGE_URL}${img}` : defaulImg;
               return (
                 <li className={styles.listItem} key={name}>
@@ -74,5 +81,9 @@ class Cast extends Component {
     );
   }
 }
+
+Cast.propTypes = {
+  id: PropTypes.number,
+};
 
 export default Cast;

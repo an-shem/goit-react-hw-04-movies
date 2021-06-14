@@ -12,8 +12,6 @@ class HomePage extends Component {
     await movieApi
       .fetchTrendingMovies()
       .then(trendingMovies => this.setState({ trendingMovies }));
-    //
-    // console.log('maunt HomePage');
   }
 
   render() {

@@ -1,4 +1,5 @@
 import { Component } from 'react';
+// import PropTypes from 'prop-types';
 import { Link, Route, Switch } from 'react-router-dom';
 import Cast from '../../components/Cast';
 import Reviews from '../../components/Reviews';
@@ -17,7 +18,6 @@ class MovieDetailsPage extends Component {
   };
 
   componentDidMount() {
-    console.log('QQQQQQ   this.props   QQQQQQQQ>>>>>>>>>>>', this.props);
     const movieId = +this.props.match.params.movieID;
     movieApi.fetchMovie(movieId).then(movie => {
       this.setState({ movie });
@@ -26,7 +26,6 @@ class MovieDetailsPage extends Component {
 
   handleGoBack = () => {
     const { state } = this.props.location;
-    console.log('GoBack  state>>>', state);
     if (state) {
       this.props.history.push({
         pathname: state.from.pathname,
@@ -94,7 +93,6 @@ class MovieDetailsPage extends Component {
           </h3>
           <ul>
             <li className={styles.additionalInformationItem}>
-              {/* <Link to={`${path}/cast`}>Cast</Link> */}
               <Link
                 to={{
                   pathname: `${path}/cast`,

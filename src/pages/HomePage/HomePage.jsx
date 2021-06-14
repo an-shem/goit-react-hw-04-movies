@@ -6,7 +6,6 @@ import styles from './HomePage.module.css';
 class HomePage extends Component {
   state = {
     trendingMovies: null,
-    genres: null,
   };
 
   async componentDidMount() {
@@ -14,9 +13,7 @@ class HomePage extends Component {
       .fetchTrendingMovies()
       .then(trendingMovies => this.setState({ trendingMovies }));
     //
-    console.log('maunt HomePage');
-
-    await movieApi.getGenres().then(({ genres }) => this.setState({ genres }));
+    // console.log('maunt HomePage');
   }
 
   render() {

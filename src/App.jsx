@@ -3,6 +3,7 @@ import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
+import NotFound from './components/NotFound';
 
 const App = () => {
   return (
@@ -11,7 +12,8 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={HomePage} />
         <Route path="/movie/:movieID" component={MovieDetailsPage} />
-        <Route path="/movie/" component={MoviesPage} />
+        <Route path="/movie" component={MoviesPage} />
+        <Route component={NotFound} />
       </Switch>
     </div>
   );

@@ -1,32 +1,38 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
+import Cast from '../../components/Cast';
+import Reviews from '../../components/Reviews';
+
 import movieApi from '../../services/movieApi';
 import styles from './MovieDetailsPage.module.css';
-import defoulImg from '../../images/ESlHHj2XkAIJUs4.jpg';
+import defaulImg from '../../images/unnamed.png';
 
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
 
 class MovieDetailsPage extends Component {
   state = {
     movie: null,
-    movies: this.props.location.state.movies,
+    pathname: this.props.location.state.from.pathname,
+    location: this.props.location,
   };
 
   componentDidMount() {
-    // console.log(+this.props.match.params.movieID);
+    console.log('QQQQQQ   this.props   QQQQQQQQ>>>>>>>>>>>', this.props);
     const movieId = +this.props.match.params.movieID;
     movieApi.fetchMovie(movieId).then(movie => {
       this.setState({ movie });
     });
-    // console.log('this.state.movies >>>', this.state.movies);
   }
 
   handleGoBack = () => {
     const { state } = this.props.location;
-    // console.log('state.from <>>>', state.from);
+    console.log('GoBack  state>>>', state);
     if (state) {
-      this.props.history.push({ ...state.from, state: this.state.movies });
-      // console.log('state.from <>>>', state.from);
+      this.props.history.push({
+        pathname: state.from.pathname,
+        search: state.from.search,
+      });
+
       return;
     }
 
@@ -37,10 +43,9 @@ class MovieDetailsPage extends Component {
 
   render() {
     if (!this.state.movie) return null;
-    //
-    // console.log(defoulImg);
-    //
+
     const {
+      id,
       genres,
       original_title: title,
       poster_path: imgUrl,
@@ -52,7 +57,7 @@ class MovieDetailsPage extends Component {
     const ganresMovie = genres.map(item => item.name).join(' ');
     const path = this.props.match.url;
     const fullImageUrl = `${IMAGE_URL}${imgUrl}`;
-    const imageUrl = imgUrl ? fullImageUrl : defoulImg;
+    const imageUrl = imgUrl ? fullImageUrl : defaulImg;
 
     return (
       <>
@@ -89,13 +94,42 @@ class MovieDetailsPage extends Component {
           </h3>
           <ul>
             <li className={styles.additionalInformationItem}>
-              <Link to={`${path}/cast`}>Cast</Link>
+              {/* <Link to={`${path}/cast`}>Cast</Link> */}
+              <Link
+                to={{
+                  pathname: `${path}/cast`,
+                  state: {
+                    from: this.state.location.state.from,
+                  },
+                }}
+              >
+                Cast
+              </Link>
             </li>
             <li className={styles.additionalInformationItem}>
-              <Link to={`${path}/reviews`}>Reviews</Link>
+              <Link
+                to={{
+                  pathname: `${path}/reviews`,
+                  state: {
+                    from: this.state.location.state.from,
+                  },
+                }}
+              >
+                Reviews
+              </Link>
             </li>
           </ul>
         </div>
+        <Switch>
+          <Route
+            path={`${this.props.match.path}/cast`}
+            render={props => <Cast {...props} id={id} />}
+          />
+          <Route
+            path={`${this.props.match.path}/reviews`}
+            render={props => <Reviews {...props} id={id} />}
+          />
+        </Switch>
       </>
     );
   }

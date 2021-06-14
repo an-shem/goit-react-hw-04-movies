@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import queryString from 'query-string';
+
 import MoviesList from '../../components/MoviesList';
 import movieApi from '../../services/movieApi.js';
 import styles from './MoviesPage.module.css';
@@ -9,14 +11,30 @@ class MoviesPage extends Component {
     searchMovies: null,
   };
 
-  componentDidMount() {
-    const moviesFromHistory = this.props.location.state;
-    if (moviesFromHistory) {
-      this.setState({ searchMovies: moviesFromHistory });
-    }
-    // console.log('this.props from MoviesPage >>>', this.props);
-    // console.log('привет из дидмаунт муви, state >>>', this.state);
-    // console.log('this.props.location.state >>>', this.props.location.state);
+  async componentDidMount() {
+    console.log('this.props in Mount >>>', this.props);
+
+    const searchNoParse = await this.props.location.search;
+    console.log('searchNoParse', searchNoParse);
+
+    if (!searchNoParse) return;
+
+    const search = queryString.parse(searchNoParse);
+    console.log('SEARCH in Mount >>>', search);
+
+    const searchQuery = search.query;
+    console.log('searchQuery >>>>', searchQuery);
+    movieApi
+      .fetchSearchMovies(searchQuery)
+      .then(searchMovies => this.setState({ searchMovies }));
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('this.props in Upodate >>>', this.props);
+    console.log('this.props in prevProps >>>', prevProps);
+
+    if (this.props.location.search === prevProps.location.search) return;
+    this.setState({ searchMovies: null });
   }
 
   handleChange = ({ target }) => {
@@ -31,7 +49,13 @@ class MoviesPage extends Component {
     if (processedValue.length === 0) return;
     movieApi
       .fetchSearchMovies(value)
-      .then(searchMovies => this.setState({ searchMovies, value: '' }));
+      .then(searchMovies => this.setState({ searchMovies, value: '' }))
+      .then(
+        this.props.history.push({
+          pathname: this.props.location.pathname,
+          search: `query=${value}`,
+        }),
+      );
   };
 
   render() {

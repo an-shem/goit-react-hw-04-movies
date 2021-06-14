@@ -28,6 +28,7 @@
 .poster {
   width: 300px;
   height: 450px;
+  object-fit: cover;
 }
 
 .inform {
@@ -45,7 +46,8 @@
 .additionalInformation {
   margin-top: 10px;
   padding: 10px 40px;
-  border: 1px solid rgb(82, 79, 79);
+  border-bottom: 1px solid rgb(82, 79, 79);
+  border-top: 1px solid rgb(82, 79, 79);
 }
 
 .additionalInformationTitel {

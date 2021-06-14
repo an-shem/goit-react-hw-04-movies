@@ -24,11 +24,16 @@ const fetchMovie = id => {
     )
     .then(response => response.data);
 };
-// https://api.themoviedb.org/3/movie/157336?api_key={api_key}&append_to_response=videos,images
 
-const getGenres = () => {
+const fetchCast = id => {
   return axios
-    .get(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`)
+    .get(`${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}&language=en-US`)
+    .then(response => response.data);
+};
+
+const fetchReviews = id => {
+  return axios
+    .get(`${BASE_URL}/movie/${id}/reviews?api_key=${API_KEY}&language=en-US`)
     .then(response => response.data);
 };
 
@@ -36,7 +41,8 @@ const movieApi = {
   fetchTrendingMovies,
   fetchSearchMovies,
   fetchMovie,
-  getGenres,
+  fetchCast,
+  fetchReviews,
 };
 
 export default movieApi;
